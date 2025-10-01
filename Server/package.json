@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Yaswantsoni1128/BloodBridge-backend#readme",
+  "bugs": {
+    "url": "https://github.com/Yaswantsoni1128/BloodBridge-backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yaswantsoni1128/BloodBridge-backend.git"
+  },
+  "license": "ISC",
+  "author": "Yaswant",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "nodemailer": "^7.0.5",
+    "twilio": "^5.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
