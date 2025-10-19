@@ -2,6 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home.jsx";
+import Services from "./pages/Services.jsx";
+import Plants from "./pages/Plants.jsx";
+import Contact from "./pages/Contact.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 
@@ -11,6 +14,9 @@ const App = () => {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/plants" element={<Plants />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
