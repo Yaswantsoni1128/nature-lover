@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Scissors, TreePine, Palette } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Services = () => {
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -92,7 +94,10 @@ const Services = () => {
                   {service.description}
                 </p>
                 
-                <button className="group/btn w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                <button 
+                  onClick={() => navigate('/services')}
+                  className="group/btn w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
+                >
                   <span>Learn More</span>
                   <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
                 </button>
@@ -103,7 +108,10 @@ const Services = () => {
 
         {/* View All Services Button */}
         <div className="text-center mt-12">
-          <button className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 mx-auto">
+          <button 
+            onClick={() => navigate('/services')}
+            className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 mx-auto"
+          >
             <span>View All Services</span>
             <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
           </button>

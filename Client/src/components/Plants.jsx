@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Star, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Plants = () => {
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -130,7 +132,10 @@ const Plants = () => {
                     {plant.price}
                   </span>
                   
-                  <button className="group/btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-2 px-6 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+                  <button 
+                    onClick={() => navigate('/plants')}
+                    className="group/btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-2 px-6 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+                  >
                     <span>Add to Cart</span>
                     <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
                   </button>
@@ -142,7 +147,10 @@ const Plants = () => {
 
         {/* Browse All Plants Button */}
         <div className="text-center mt-12">
-          <button className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 mx-auto">
+          <button 
+            onClick={() => navigate('/plants')}
+            className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 mx-auto"
+          >
             <span>Browse All Plants</span>
             <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
           </button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Leaf } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,9 +46,9 @@ const Header = () => {
             {navItems.map((item) => {
               const isActive = location.pathname === item.href;
               return (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className={`transition-colors duration-200 font-medium ${
                     isActive 
                       ? 'text-green-600 border-b-2 border-green-600' 
@@ -56,7 +56,7 @@ const Header = () => {
                   }`}
                 >
                   {item.name}
-                </a>
+                </Link>
               );
             })}
           </div>
@@ -77,9 +77,9 @@ const Header = () => {
               {navItems.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className={`block py-2 transition-colors duration-200 ${
                       isActive 
                         ? 'text-green-600 font-semibold border-l-4 border-green-600 pl-2' 
@@ -88,7 +88,7 @@ const Header = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 );
               })}
             </div>

@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const heroRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,13 +87,19 @@ const Hero = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {/* Option 1: Green gradient buttons */}
-            <button className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 drop-shadow-lg">
+            <button 
+              onClick={() => navigate('/services')}
+              className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 drop-shadow-lg"
+            >
               <span>Our Services</span>
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
             
             {/* Option 2: White button with green border */}
-            <button className="group bg-transparent border-2 border-white text-white hover:bg-white hover:text-green-600 px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 drop-shadow-lg">
+            <button 
+              onClick={() => navigate('/plants')}
+              className="group bg-transparent border-2 border-white text-white hover:bg-white hover:text-green-600 px-6 py-3 rounded-full font-semibold text-base transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 drop-shadow-lg"
+            >
               <span>Buy Plants</span>
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
