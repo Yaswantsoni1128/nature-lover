@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('accessToken'));
+  const [authCheckInProgress, setAuthCheckInProgress] = useState(false);
 
   // Configure axios defaults
   useEffect(() => {
@@ -28,21 +29,33 @@ export const AuthProvider = ({ children }) => {
   // Check if user is logged in on app start
   useEffect(() => {
     const checkAuth = async () => {
-      if (token) {
+      if (token && !authCheckInProgress) {
+        setAuthCheckInProgress(true);
         try {
           const response = await api.get('/api/user/me');
           setUser(response.data.user);
         } catch (error) {
           console.error('Auth check failed:', error);
-          localStorage.removeItem('accessToken');
-          setToken(null);
+          // Only clear token if it's a 401 error (unauthorized)
+          if (error.response?.status === 401) {
+            localStorage.removeItem('accessToken');
+            setToken(null);
+            setUser(null);
+          }
+        } finally {
+          setAuthCheckInProgress(false);
         }
       }
       setLoading(false);
     };
 
-    checkAuth();
-  }, [token]);
+    // Only check auth if there's a token and we're not already authenticated
+    if (token && !user && !authCheckInProgress) {
+      checkAuth();
+    } else {
+      setLoading(false);
+    }
+  }, []); // Remove token dependency to prevent loops
 
   const login = async (email, password) => {
     try {
@@ -105,7 +118,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    loading,
+    loading: loading || authCheckInProgress,
     login,
     register,
     logout,

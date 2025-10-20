@@ -32,7 +32,21 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Token expired or invalid
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      
+      // Only redirect if not already on login page, not during login/register requests,
+      // and not during the initial auth check
+      const currentPath = window.location.pathname;
+      const isAuthRoute = currentPath === '/login' || currentPath === '/register';
+      const isAuthRequest = error.config?.url?.includes('/login') || error.config?.url?.includes('/register');
+      const isAuthCheck = error.config?.url?.includes('/user/me');
+      
+      // Don't redirect if it's the initial auth check or if we're on auth routes
+      // if (!isAuthRoute && !isAuthRequest && !isAuthCheck) {
+      //   // Use a small delay to prevent rapid redirects
+      //   setTimeout(() => {
+      //     window.location.href = '/login';
+      //   }, 100);
+      // }
     }
     return Promise.reject(error);
   }
