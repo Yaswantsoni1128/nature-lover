@@ -47,6 +47,14 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// Lightweight ping endpoint for self-ping
+app.get('/ping', (req, res) => {
+    res.status(200).json({
+        ok: true,
+        time: new Date().toISOString()
+    });
+});
+
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
