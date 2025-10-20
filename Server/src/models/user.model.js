@@ -33,8 +33,8 @@ const userSchema= new mongoose.Schema(
         },
         role:{
             type:String,
-            enum:["BloodBank","hospital"],
-            default:"hospital",
+            enum:["user","admin"],
+            default:"user",
         },
         resetPasswordToken: {
             type: String,
@@ -52,15 +52,16 @@ const userSchema= new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
+  console.log("Hashing password for user:", this.email);
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-userSchema.methods.isPasswordCorrect=async function(pasword){
-    return await bcrypt.compare(pasword,this.password);
+userSchema.methods.isPasswordCorrect=async function(password){
+    return await bcrypt.compare(password,this.password);
 }
 
-userSchema.methods.generateAcessToken= function(){
+userSchema.methods.generateAccessToken= function(){
     return jwt.sign({
         _id:this._id,
     },

@@ -13,7 +13,7 @@ const userController={
             if(!isPasswordCorrect){
                 return res.status(400).json({message:"Invalid password"});
             }
-            const accessToken=user.generateAcessToken();
+            const accessToken=user.generateAccessToken();
             const refreshToken=user.generateRefreshToken();
             user.refreshToken=refreshToken;
             await user.save();
@@ -43,19 +43,25 @@ const userController={
     register: async(req,res)=>{
         try {
             const {name, email, password, phone}= req.body;
+            console.log("Registration attempt for:", { name, email, phone });
+            
             const existingUser = await User.findOne({
                 $or: [{ email }, { phone }],
             });
             if(existingUser){
+                console.log("User already exists:", existingUser.email);
                 return res.status(400).json({message:"Email or phone number already in use"});
             }
+            
+            console.log("Creating new user...");
             const newUser= await User.create({
                 name,
                 email,
                 password,
                 phone
             });
-            const accessToken=newUser.generateAcessToken();
+            console.log("User created successfully:", newUser._id);
+            const accessToken=newUser.generateAccessToken();
             const refreshToken=newUser.generateRefreshToken();
             newUser.refreshToken=refreshToken;
             await newUser.save();
@@ -75,7 +81,7 @@ const userController={
                     name: newUser.name,
                     email: newUser.email,
                     phone:newUser.phone,
-                    role:newUser.role,
+                    role:"user",
                 }
             });
         } catch (error) {
@@ -116,7 +122,7 @@ const userController={
             if(!user){
                 return res.status(400).json({message:"User not found"});
             }
-            const newAccessToken=user.generateAcessToken();
+            const newAccessToken=user.generateAccessToken();
             res.status(200).json({
                 message: "Access token refreshed successfully",
                 accessToken: newAccessToken

@@ -1,16 +1,22 @@
 import express from "express"
 import userController from "../controllers/user.controller.js"
 import { validateJWT } from "../middlewares/auth.middleware.js"
+import { 
+    validateRegistration, 
+    validateLogin, 
+    validateForgotPassword, 
+    validateResetPassword 
+} from "../middlewares/validation.middleware.js"
 
 const router= express.Router();
 
 // PUBLIC ROUTES
-router.post("/register", userController.register);
-router.post("/login", userController.login);
+router.post("/register", validateRegistration, userController.register);
+router.post("/login", validateLogin, userController.login);
 router.post("/refresh-token", userController.refreshAccessToken);
 router.post("/logout", userController.logout);
-router.post("/forgot-password", userController.forgotPassword);
-router.post("/reset-password", userController.resetPassword);
+router.post("/forgot-password", validateForgotPassword, userController.forgotPassword);
+router.post("/reset-password", validateResetPassword, userController.resetPassword);
 
 // PROTECTED ROUTES USED VALIDATOR
 router.get("/me", validateJWT, userController.getCurrentUser);

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Leaf } from 'lucide-react';
-import { useLocation, Link } from 'react-router-dom';
+import { Menu, X, Leaf, LogOut } from 'lucide-react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,13 +18,28 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Services', href: '/services' },
-    { name: 'Buy Plants', href: '/plants' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Register', href: '/register' }
-  ];
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+    setIsMenuOpen(false);
+  };
+
+  const navItems = isAuthenticated 
+    ? [
+        { name: 'Home', href: '/' },
+        { name: 'Services', href: '/services' },
+        { name: 'Buy Plants', href: '/plants' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Orders', href: '/orders' }
+      ]
+    : [
+        { name: 'Home', href: '/' },
+        { name: 'Services', href: '/services' },
+        { name: 'Buy Plants', href: '/plants' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Login', href: '/login' },
+        { name: 'Register', href: '/register' }
+      ];
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
@@ -59,6 +77,17 @@ const Header = () => {
                 </Link>
               );
             })}
+            
+            {/* Logout Button for Authenticated Users */}
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -91,6 +120,17 @@ const Header = () => {
                   </Link>
                 );
               })}
+              
+              {/* Mobile Logout Button for Authenticated Users */}
+              {isAuthenticated && (
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-200 w-full py-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              )}
             </div>
           </div>
         )}
