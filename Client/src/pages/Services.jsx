@@ -482,7 +482,7 @@ const Services = () => {
                     </div>
 
                     {/* Quantity Controls */}
-                    <div className="flex items-center justify-between mb-4">
+                    {/* <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-semibold text-gray-700">Quantity:</span>
                       <div className="flex items-center space-x-3">
                         <button
@@ -503,7 +503,7 @@ const Services = () => {
                           <Plus className="h-4 w-4 text-green-600" />
                         </button>
                       </div>
-                    </div>
+                    </div> */}
 
                     <button
                       onClick={() => handleOrderNow(service)}
