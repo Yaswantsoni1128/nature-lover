@@ -34,7 +34,14 @@ const Login = () => {
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
-      navigate('/orders');
+      // Check if user was redirected from checkout
+      const pendingCheckout = localStorage.getItem('pendingCheckout');
+      if (pendingCheckout) {
+        localStorage.removeItem('pendingCheckout');
+        navigate('/cart');
+      } else {
+        navigate('/orders');
+      }
     } else {
       setError(result.message);
     }

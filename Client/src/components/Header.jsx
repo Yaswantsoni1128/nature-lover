@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Leaf, LogOut } from 'lucide-react';
+import { Menu, X, Leaf, LogOut, ShoppingCart } from 'lucide-react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { useCart } from '../contexts/CartContext.jsx';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,6 +10,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { getTotalItems } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,16 +80,30 @@ const Header = () => {
               );
             })}
             
-            {/* Logout Button for Authenticated Users */}
-            {isAuthenticated && (
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
-              </button>
-            )}
+               {/* Cart Icon */}
+               <Link
+                 to="/cart"
+                 className="relative flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
+               >
+                 <ShoppingCart className="h-5 w-5" />
+                 <span>Cart</span>
+                 {getTotalItems() > 0 && (
+                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                     {getTotalItems()}
+                   </span>
+                 )}
+               </Link>
+
+               {/* Logout Button for Authenticated Users */}
+               {isAuthenticated && (
+                 <button
+                   onClick={handleLogout}
+                   className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
+                 >
+                   <LogOut className="h-4 w-4" />
+                   <span>Logout</span>
+                 </button>
+               )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -121,16 +137,31 @@ const Header = () => {
                 );
               })}
               
-              {/* Mobile Logout Button for Authenticated Users */}
-              {isAuthenticated && (
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-200 w-full py-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </button>
-              )}
+                   {/* Mobile Cart Link */}
+                   <Link
+                     to="/cart"
+                     className="flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors duration-200 py-2"
+                     onClick={() => setIsMenuOpen(false)}
+                   >
+                     <ShoppingCart className="h-4 w-4" />
+                     <span>Cart</span>
+                     {getTotalItems() > 0 && (
+                       <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold ml-2">
+                         {getTotalItems()}
+                       </span>
+                     )}
+                   </Link>
+
+                   {/* Mobile Logout Button for Authenticated Users */}
+                   {isAuthenticated && (
+                     <button
+                       onClick={handleLogout}
+                       className="flex items-center space-x-2 text-red-600 hover:text-red-700 font-medium transition-colors duration-200 w-full py-2"
+                     >
+                       <LogOut className="h-4 w-4" />
+                       <span>Logout</span>
+                     </button>
+                   )}
             </div>
           </div>
         )}

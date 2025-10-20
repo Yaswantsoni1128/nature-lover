@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Filter, Star, ShoppingCart, Sun, Droplets, Leaf, Home, ArrowRight, Sparkles } from 'lucide-react';
+import { Search, Filter, Star, ShoppingCart, Sun, Droplets, Leaf, Home, ArrowRight, Sparkles, Plus, Minus } from 'lucide-react';
 import ScrollToTop from '../utils/ScrollToTop';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useCart } from '../contexts/CartContext.jsx';
 
 const Plants = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,14 +12,16 @@ const Plants = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [showFilters, setShowFilters] = useState(false);
   const [filteredPlants, setFilteredPlants] = useState([]);
+  const [quantities, setQuantities] = useState({});
   const sectionRef = useRef(null);
+  const { addToCart } = useCart();
 
   const plants = [
     {
       id: 1,
       name: "Hibiscus",
       description: "Bright and vibrant flowers. Ideal for small gardens.",
-      price: "₹250",
+      price: 250,
       size: "small",
       image_url: "/image/hibiscus.png",
       details: ["Flowering", "Full Sun", "Regular Water", "Colorful"]
@@ -27,7 +30,7 @@ const Plants = () => {
       id: 2,
       name: "Premium Roses",
       description: "Beautiful, fragrant roses in various colors. Perfect for gifts or gardens.",
-      price: "₹150",
+      price: 150,
       size: "small",
       image_url: "/LandingPage/rose.jpg",
       details: ["Flowering", "Full Sun", "Moderate Water", "Colorful"]
@@ -36,7 +39,7 @@ const Plants = () => {
       id: 3,
       name: "Aparajita",
       description: "Beautiful flowering vine for medium gardens and trellises.",
-      price: "₹150",
+      price: 150,
       size: "medium",
       image_url: "/image/aparajita.jpg",
       details: ["Climbing", "Full Sun", "Regular Water", "Colorful"]
@@ -45,7 +48,7 @@ const Plants = () => {
       id: 4,
       name: "Lantana",
       description: "Colorful flowering shrub, ideal for small gardens.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/lantana.png",
       details: ["Flowering", "Full Sun", "Regular Water", "Colorful"]
@@ -54,7 +57,7 @@ const Plants = () => {
       id: 5,
       name: "Portulaca",
       description: "Drought-tolerant flowering plant with colorful blooms.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/portulaca.png",
       details: ["Flowering", "Full Sun", "Regular Water", "Colorful"]
@@ -63,7 +66,7 @@ const Plants = () => {
       id: 6,
       name: "Ixora",
       description: "Compact flowering shrub with bright clusters of blooms.",
-      price: "₹230",
+      price: 230,
       size: "small",
       image_url: "/image/ixora.png",
       details: ["Flowering", "Full Sun", "Moderate Water", "Colorful"]
@@ -72,7 +75,7 @@ const Plants = () => {
       id: 7,
       name: "Coleus",
       description: "Vibrant foliage plant, perfect for adding color to your garden.",
-      price: "₹230",
+      price: 230,
       size: "small",
       image_url: "/image/coleus.png",
       details: ["Foliage", "Full Sun", "Regular Water", "Colorful"]
@@ -81,7 +84,7 @@ const Plants = () => {
       id: 8,
       name: "Jasmine",
       description: "Fragrant flowering vine, perfect for balconies and trellises.",
-      price: "₹80",
+      price: 80,
       size: "small",
       image_url: "/image/jasmine.png",
       details: ["Climbing", "Full Sun", "Regular Water"]
@@ -90,7 +93,7 @@ const Plants = () => {
       id: 9,
       name: "Areca Palm",
       description: "A lush, air-purifying plant with feathery fronds. Ideal for living rooms or hallways.",
-      price: "₹140",
+      price: 140,
       size: "medium",
       image_url: "/image/bomboo-palm.png",
       details: ["Partial Shade", "Low Water", "Indoor", "Air Purifying"]
@@ -99,7 +102,7 @@ const Plants = () => {
       id: 10,
       name: "Snake Plant",
       description: "A variety of beautiful indoor plants that purify air and add life to your living spaces.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/sansevieria-hahnii.png",
       details: ["Low Light", "Low Water", "Air Purifier"]
@@ -108,7 +111,7 @@ const Plants = () => {
       id: 11,
       name: "ZZ Plant",
       description: "Glossy, hardy leaves, perfect for small indoor spaces.",
-      price: "₹240",
+      price: 240,
       size: "small",
       image_url: "/image/zzplant.png",
       details: ["Low Light", "Moderate Watering", "Easy Care"]
@@ -117,16 +120,16 @@ const Plants = () => {
       id: 12,
       name: "Peace Lily",
       description: "Beautiful white blooms. Purifies air and adds elegance to interiors.",
-      price: "₹240",
+      price: 240,
       size: "medium",
-      image_url: "/image/peace-lily.png",
+      image_url: "/image/zzplant.png",
       details: ["Bright Light", "Minimal Water"]
     },
     {
       id: 13,
       name: "Money Plant",
       description: "Brings prosperity and good fortune. Easy to care for indoor spaces.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/LandingPage/money_plant.jpg",
       details: ["Partial Shade", "Low Water", "Indoor"]
@@ -135,7 +138,7 @@ const Plants = () => {
       id: 14,
       name: "Rubber Plant",
       description: "Bold dark green leaves, ideal for decorative corners.",
-      price: "₹250",
+      price: 250,
       size: "medium",
       image_url: "/image/zzplant.png",
       details: ["Shade", "High Humidity", "Indoor/Outdoor"]
@@ -144,43 +147,43 @@ const Plants = () => {
       id: 15,
       name: "Spider Plant",
       description: "Elegant arching leaves and baby offshoots. Very easy to care for.",
-      price: "₹50",
+      price: 50,
       size: "small",
-      image_url: "/image/spider-plant.png",
+      image_url: "/image/zzplant.png",
       details: ["Climbing", "Full Sun", "Regular Water"]
     },
     {
       id: 16,
       name: "Chinese Evergreen",
       description: "Colorful foliage that thrives in low light. Great for beginners.",
-      price: "₹240",
+      price: 240,
       size: "medium",
-      image_url: "/image/chinese-evergreen.png",
+      image_url: "/image/coleus.png",
       details: ["Low Light", "Moderate Watering", "Air Purifier"]
     },
     {
       id: 17,
       name: "Monstera Deliciosa",
       description: "A stunning tropical plant known for its large, unique leaves. Perfect for home decoration.",
-      price: "₹400",
+      price: 400,
       size: "small",
-      image_url: "/image/monstera.png",
+      image_url: "/image/zzplant.png",
       details: ["Bright Indirect", "Careful Watering", "Zen"]
     },
     {
       id: 18,
       name: "Aloe Vera",
       description: "Healing plant with a clean look. Needs very little water.",
-      price: "₹50",
+      price: 50,
       size: "small",
-      image_url: "/image/aloe-vera.png",
+      image_url: "/image/cactus.png",
       details: ["Low Light", "Moderate Watering", "Air Purifier"]
     },
     {
       id: 19,
       name: "Boston Fern",
       description: "Feathery foliage. Excellent air purifier and indoor greenery.",
-      price: "₹240",
+      price: 240,
       size: "medium",
       image_url: "/image/boston-fern.png",
       details: ["Bright Indirect", "Regular Water", "Air Purifier"]
@@ -189,16 +192,16 @@ const Plants = () => {
       id: 20,
       name: "Bamboo Palm",
       description: "Compact, elegant palm. Adds freshness to any room.",
-      price: "₹150",
+      price: 150,
       size: "small",
-      image_url: "/image/bamboo-palm.png",
+      image_url: "/image/bomboo-palm.png",
       details: ["Full Sun", "Regular Water", "Climbing"]
     },
     {
       id: 21,
       name: "Sedum",
       description: "Succulent plant, drought-tolerant, perfect for low-maintenance greenery.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/sedum.png",
       details: ["Full Sun", "Minimal Water", "Easy Care"]
@@ -207,7 +210,7 @@ const Plants = () => {
       id: 22,
       name: "Sansevieria Hahnii",
       description: "Compact succulent with easy care. Great for desktops and indoor corners.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/sansevieria-hahnii.png",
       details: ["Bright Light", "Minimal Water", "Easy Care"]
@@ -216,7 +219,7 @@ const Plants = () => {
       id: 23,
       name: "Cactus",
       description: "Low-maintenance succulent. Ideal for sunny spots and easy care.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/cactus.png",
       details: ["Full Sun", "Minimal Water", "Easy Care"]
@@ -225,7 +228,7 @@ const Plants = () => {
       id: 24,
       name: "Haworthia",
       description: "Compact succulent with spiky leaves. Very low maintenance and indoor-friendly.",
-      price: "₹50",
+      price: 50,
       size: "small",
       image_url: "/image/haworthia.png",
       details: ["Bright Light", "Minimal Water", "Easy Care"]
@@ -274,7 +277,7 @@ const Plants = () => {
     // Price category filter
     if (selectedCare !== 'all') {
       filtered = filtered.filter(plant => {
-        const price = parseInt(plant.price.replace('₹', ''));
+        const price = plant.price;
         switch (selectedCare) {
           case 'budget':
             return price >= 0 && price <= 100;
@@ -295,8 +298,27 @@ const Plants = () => {
     setFilteredPlants(filtered);
   }, [searchTerm, selectedSize, selectedCare]);
 
+  const updateQuantity = (plantId, change) => {
+    setQuantities(prev => ({
+      ...prev,
+      [plantId]: Math.max(1, (prev[plantId] || 1) + change)
+    }));
+  };
+
   const handleOrderNow = (plant) => {
-    alert(`Order placed for ${plant.name} - ${plant.price}`);
+    const quantity = quantities[plant.id] || 1;
+    // Add the plant with the correct quantity (not in a loop)
+    const plantWithQuantity = {
+      ...plant,
+      quantity: quantity
+    };
+    addToCart(plantWithQuantity, 'plant');
+    
+    // Reset quantity after adding to cart
+    setQuantities(prev => ({
+      ...prev,
+      [plant.id]: 1
+    }));
   };
 
   return (
@@ -611,14 +633,38 @@ const Plants = () => {
                     {/* Price and Order */}
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <span className="text-xl font-bold text-green-600">{plant.price}</span>
+                        <span className="text-xl font-bold text-green-600">₹{plant.price.toLocaleString()}</span>
                         <span className="text-gray-500 ml-1 text-sm">{plant.size}</span>
+                      </div>
+                    </div>
+
+                    {/* Quantity Controls */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-semibold text-gray-700">Quantity:</span>
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={() => updateQuantity(plant.id, -1)}
+                          className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-300"
+                        >
+                          <Minus className="h-4 w-4 text-gray-600" />
+                        </button>
+                        
+                        <span className="w-8 text-center font-semibold text-gray-800">
+                          {quantities[plant.id] || 1}
+                        </span>
+                        
+                        <button
+                          onClick={() => updateQuantity(plant.id, 1)}
+                          className="w-8 h-8 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors duration-300"
+                        >
+                          <Plus className="h-4 w-4 text-green-600" />
+                        </button>
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleOrderNow(plant)}
-                      className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md"
+                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md"
                     >
                       <ShoppingCart className="h-4 w-4" />
                       <span>Order Now</span>

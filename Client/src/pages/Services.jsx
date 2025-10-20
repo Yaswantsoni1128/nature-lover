@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Phone, Mail, Sparkles, Star, Zap, Shield, Award, Check, Search, Filter } from 'lucide-react';
+import { ArrowRight, Phone, Mail, Sparkles, Star, Zap, Shield, Award, Check, Search, Filter, ShoppingCart, Plus, Minus } from 'lucide-react';
 import ScrollToTop from '../utils/ScrollToTop';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { useCart } from '../contexts/CartContext.jsx';
 
 const Services = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,9 +11,11 @@ const Services = () => {
   const [selectedPrice, setSelectedPrice] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
+  const [quantities, setQuantities] = useState({});
   const sectionRef = useRef(null);
   const heroRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,7 +59,7 @@ const Services = () => {
         "Edge trimming", 
         "Grass collection"
       ],
-      price: "₹2,500",
+      price: 2500,
       period: "per service",
       badge: "Popular",
       category: "maintenance"
@@ -71,7 +74,7 @@ const Services = () => {
         "Tree removal",
         "Health assessments"
       ],
-      price: "₹6,200",
+      price: 6200,
       period: "per service",
       badge: "Expert",
       category: "tree"
@@ -86,7 +89,7 @@ const Services = () => {
         "Soil preparation",
         "Professional planting"
       ],
-      price: "₹4,200",
+      price: 4200,
       period: "per service",
       badge: "New",
       category: "planting"
@@ -101,7 +104,7 @@ const Services = () => {
         "Weed control",
         "Lawn aeration"
       ],
-      price: "₹3,300",
+      price: 3300,
       period: "per treatment",
       badge: "Best Value",
       category: "maintenance"
@@ -116,7 +119,7 @@ const Services = () => {
         "Shape maintenance",
         "Debris cleanup"
       ],
-      price: "₹2,900",
+      price: 2900,
       period: "per service",
       badge: "Popular",
       category: "maintenance"
@@ -131,7 +134,7 @@ const Services = () => {
         "Debris clearing",
         "Seasonal cleanup"
       ],
-      price: "₹3,800",
+      price: 3800,
       period: "per visit",
       badge: "Seasonal",
       category: "maintenance"
@@ -146,7 +149,7 @@ const Services = () => {
         "Plant installation",
         "Hardscape features"
       ],
-      price: "₹16,500",
+      price: 16500,
       period: "per project",
       badge: "Premium",
       category: "design"
@@ -171,7 +174,7 @@ const Services = () => {
     // Price filter
     if (selectedPrice !== 'all') {
       filtered = filtered.filter(service => {
-        const price = parseInt(service.price.replace('₹', '').replace(',', ''));
+        const price = service.price;
         switch (selectedPrice) {
           case 'budget':
             return price >= 0 && price <= 3000;
@@ -190,8 +193,27 @@ const Services = () => {
     setFilteredServices(filtered);
   }, [searchTerm, selectedCategory, selectedPrice]);
 
+  const updateQuantity = (serviceId, change) => {
+    setQuantities(prev => ({
+      ...prev,
+      [serviceId]: Math.max(1, (prev[serviceId] || 1) + change)
+    }));
+  };
+
   const handleOrderNow = (service) => {
-    alert(`Order placed for ${service.title} - ${service.price}${service.period}`);
+    const quantity = quantities[service.id] || 1;
+    // Add the service with the correct quantity (not in a loop)
+    const serviceWithQuantity = {
+      ...service,
+      quantity: quantity
+    };
+    addToCart(serviceWithQuantity, 'service');
+    
+    // Reset quantity after adding to cart
+    setQuantities(prev => ({
+      ...prev,
+      [service.id]: 1
+    }));
   };
 
   return (
@@ -454,17 +476,41 @@ const Services = () => {
                     {/* Price and Order */}
                     <div className="flex items-center justify-between mb-3">
                       <div>
-                        <span className="text-xl font-bold text-green-600">{service.price}</span>
+                        <span className="text-xl font-bold text-green-600">₹{service.price.toLocaleString()}</span>
                         <span className="text-gray-500 ml-1 text-sm">{service.period}</span>
+                      </div>
+                    </div>
+
+                    {/* Quantity Controls */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-semibold text-gray-700">Quantity:</span>
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={() => updateQuantity(service.id, -1)}
+                          className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-300"
+                        >
+                          <Minus className="h-4 w-4 text-gray-600" />
+                        </button>
+                        
+                        <span className="w-8 text-center font-semibold text-gray-800">
+                          {quantities[service.id] || 1}
+                        </span>
+                        
+                        <button
+                          onClick={() => updateQuantity(service.id, 1)}
+                          className="w-8 h-8 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors duration-300"
+                        >
+                          <Plus className="h-4 w-4 text-green-600" />
+                        </button>
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleOrderNow(service)}
-                      className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md"
+                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md"
                     >
+                      <ShoppingCart className="h-4 w-4" />
                       <span>Order Now</span>
-                      <ArrowRight className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
