@@ -6,7 +6,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -38,5 +37,53 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Async/await wrapper functions for common HTTP methods
+export const apiRequest = {
+  async get(url, config = {}) {
+    try {
+      const response = await api.get(url, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async post(url, data = {}, config = {}) {
+    try {
+      const response = await api.post(url, data, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async put(url, data = {}, config = {}) {
+    try {
+      const response = await api.put(url, data, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async patch(url, data = {}, config = {}) {
+    try {
+      const response = await api.patch(url, data, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async delete(url, config = {}) {
+    try {
+      const response = await api.delete(url, config);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
 
 export default api;
