@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { errorHandler } from './middlewares/error.middleware.js';
 import userRouter from "./routes/user.routes.js";
+import contactRouter from "./routes/contact.routes.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/user', userRouter);
+app.use('/api/contact', contactRouter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

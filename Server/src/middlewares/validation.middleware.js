@@ -94,3 +94,42 @@ export const validateResetPassword = (req, res, next) => {
     
     next();
 };
+
+export const validateContactForm = (req, res, next) => {
+    const { firstName, lastName, email, message } = req.body;
+    
+    // Check required fields
+    if (!firstName || !lastName || !email || !message) {
+        return res.status(400).json({
+            success: false,
+            message: "First name, last name, email, and message are required"
+        });
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({
+            success: false,
+            message: "Please enter a valid email address"
+        });
+    }
+    
+    // Validate message length
+    if (message.length < 10) {
+        return res.status(400).json({
+            success: false,
+            message: "Message must be at least 10 characters long"
+        });
+    }
+    
+    // Validate name length
+    if (firstName.length < 2 || lastName.length < 2) {
+        return res.status(400).json({
+            success: false,
+            message: "Name must be at least 2 characters long"
+        });
+    }
+    
+    next();
+};

@@ -1,11 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import { Mail, Phone, MapPin, ArrowRight, Sparkles, Star, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Mail, Phone, MapPin, ArrowRight, Sparkles, Star, Zap, CheckCircle, AlertCircle } from 'lucide-react';
 import ScrollToTop from '../utils/ScrollToTop';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import api from '../api/api.js';
 
 const Contact = () => {
   const sectionRef = useRef(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -25,6 +36,41 @@ const Contact = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setMessage('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await api.post('/api/contact/send-message', formData);
+      
+      if (response.data.success) {
+        setMessage(response.data.message);
+        setMessageType('success');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          message: ''
+        });
+      }
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to send message. Please try again.');
+      setMessageType('error');
+    }
+    
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -252,20 +298,45 @@ const Contact = () => {
               <h4 className="text-xl font-bold text-green-800 mb-6 text-center">
                 Send Us a Message
               </h4>
-              <form className="space-y-6">
+
+              {/* Success/Error Message */}
+              {message && (
+                <div className={`mb-6 p-4 rounded-lg flex items-center space-x-3 ${
+                  messageType === 'success' 
+                    ? 'bg-green-50 border border-green-200 text-green-700' 
+                    : 'bg-red-50 border border-red-200 text-red-700'
+                }`}>
+                  {messageType === 'success' ? (
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <AlertCircle className="h-5 w-5 text-red-500" />
+                  )}
+                  <span>{message}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">First Name *</label>
                     <input
                       type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                       placeholder="Your first name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name *</label>
                     <input
                       type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                       placeholder="Your last name"
                     />
@@ -273,9 +344,13 @@ const Contact = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                     placeholder="your.email@example.com"
                   />
@@ -285,15 +360,22 @@ const Contact = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
                   <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                     placeholder="+91 9876543210"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
                   <textarea
                     rows="4"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 resize-none"
                     placeholder="Tell us about your gardening needs..."
                   ></textarea>
@@ -301,10 +383,17 @@ const Contact = () => {
                 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-xl font-bold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center justify-center space-x-2"
+                  disabled={loading}
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 px-6 rounded-xl font-bold text-base transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center justify-center space-x-2"
                 >
-                  <span>Send Message</span>
-                  <ArrowRight className="h-5 w-5" />
+                  {loading ? (
+                    <span>Sending Message...</span>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
                 </button>
               </form>
             </div>
