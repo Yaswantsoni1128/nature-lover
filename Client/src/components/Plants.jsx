@@ -28,7 +28,7 @@ const Plants = () => {
   const plants = [
     {
       name: "Premium Roses",
-      price: "₹2,100",
+      price: "₹150",
       image: "/LandingPage/rose.jpg",
       rating: 4.8,
       reviews: 124,
@@ -36,7 +36,7 @@ const Plants = () => {
     },
     {
       name: "Money Plant",
-      price: "₹1,250",
+      price: "₹50",
       image: "/LandingPage/money_plant.jpg",
       rating: 4.9,
       reviews: 89,
@@ -44,7 +44,7 @@ const Plants = () => {
     },
     {
       name: "Indoor Plants",
-      price: "₹1,650",
+      price: "₹150",
       image: "/LandingPage/indoor_plants.jpg",
       rating: 4.7,
       reviews: 156,
