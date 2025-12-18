@@ -1,30 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Filter, Star, ShoppingCart, Sun, Droplets, Leaf, Home, ArrowRight, Sparkles, Plus, Minus } from 'lucide-react';
+import { Search, Filter, Star, ShoppingCart, Sun, Droplets, Leaf, Sparkles } from 'lucide-react';
 import ScrollToTop from '../utils/ScrollToTop';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useCart } from '../contexts/CartContext.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
+import Toast from '../components/Toast';
 
-const Plants = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSize, setSelectedSize] = useState('all');
-  const [selectedCare, setSelectedCare] = useState('all');
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [showFilters, setShowFilters] = useState(false);
-  const [filteredPlants, setFilteredPlants] = useState([]);
-  const [quantities, setQuantities] = useState({});
-  const sectionRef = useRef(null);
-  const { addToCart } = useCart();
-
-  const plants = [
+// Static plants data outside component for better performance on mobile
+const PLANTS = [
     {
       id: 1,
       name: "Hibiscus",
       description: "Bright and vibrant flowers. Ideal for small gardens.",
       price: 250,
       size: "small",
-      image_url: "/image/hibiscus.png",
-      details: ["Flowering", "Full Sun", "Regular Water", "Colorful"]
+      image_url: "/image/Hibiscus.jpg",
+      details: ["Flowering", "Full Sun", "Regular Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 2,
@@ -33,7 +27,8 @@ const Plants = () => {
       price: 150,
       size: "small",
       image_url: "/LandingPage/rose.jpg",
-      details: ["Flowering", "Full Sun", "Moderate Water", "Colorful"]
+      details: ["Flowering", "Full Sun", "Moderate Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 3,
@@ -41,8 +36,9 @@ const Plants = () => {
       description: "Beautiful flowering vine for medium gardens and trellises.",
       price: 150,
       size: "medium",
-      image_url: "/image/aparajita.jpg",
-      details: ["Climbing", "Full Sun", "Regular Water", "Colorful"]
+      image_url: "/image/Aparajita.jpg",
+      details: ["Climbing", "Full Sun", "Regular Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 4,
@@ -50,8 +46,9 @@ const Plants = () => {
       description: "Colorful flowering shrub, ideal for small gardens.",
       price: 50,
       size: "small",
-      image_url: "/image/lantana.png",
-      details: ["Flowering", "Full Sun", "Regular Water", "Colorful"]
+      image_url: "/image/Lantana.jpg",
+      details: ["Flowering", "Full Sun", "Regular Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 5,
@@ -59,8 +56,9 @@ const Plants = () => {
       description: "Drought-tolerant flowering plant with colorful blooms.",
       price: 50,
       size: "small",
-      image_url: "/image/portulaca.png",
-      details: ["Flowering", "Full Sun", "Regular Water", "Colorful"]
+      image_url: "/image/Portulaca.jpg",
+      details: ["Flowering", "Full Sun", "Regular Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 6,
@@ -68,8 +66,9 @@ const Plants = () => {
       description: "Compact flowering shrub with bright clusters of blooms.",
       price: 230,
       size: "small",
-      image_url: "/image/ixora.png",
-      details: ["Flowering", "Full Sun", "Moderate Water", "Colorful"]
+      image_url: "/image/Ixora.jpg",
+      details: ["Flowering", "Full Sun", "Moderate Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 7,
@@ -77,8 +76,9 @@ const Plants = () => {
       description: "Vibrant foliage plant, perfect for adding color to your garden.",
       price: 230,
       size: "small",
-      image_url: "/image/coleus.png",
-      details: ["Foliage", "Full Sun", "Regular Water", "Colorful"]
+      image_url: "/image/Aglaonema.jpg",
+      details: ["Foliage", "Full Sun", "Regular Water", "Colorful"],
+      category: "outdoor"
     },
     {
       id: 8,
@@ -86,8 +86,9 @@ const Plants = () => {
       description: "Fragrant flowering vine, perfect for balconies and trellises.",
       price: 80,
       size: "small",
-      image_url: "/image/jasmine.png",
-      details: ["Climbing", "Full Sun", "Regular Water"]
+      image_url: "/image/Jasmine.jpg",
+      details: ["Climbing", "Full Sun", "Regular Water"],
+      category: "outdoor"
     },
     {
       id: 9,
@@ -95,8 +96,9 @@ const Plants = () => {
       description: "A lush, air-purifying plant with feathery fronds. Ideal for living rooms or hallways.",
       price: 140,
       size: "medium",
-      image_url: "/image/bomboo-palm.png",
-      details: ["Partial Shade", "Low Water", "Indoor", "Air Purifying"]
+      image_url: "/image/Arecapalm.jpg",
+      details: ["Partial Shade", "Low Water", "Indoor", "Air Purifying"],
+      category: "indoor"
     },
     {
       id: 10,
@@ -104,8 +106,9 @@ const Plants = () => {
       description: "A variety of beautiful indoor plants that purify air and add life to your living spaces.",
       price: 50,
       size: "small",
-      image_url: "/image/sansevieria-hahnii.png",
-      details: ["Low Light", "Low Water", "Air Purifier"]
+      image_url: "/image/Snakeplant.jpg",
+      details: ["Low Light", "Low Water", "Air Purifier"],
+      category: "indoor"
     },
     {
       id: 11,
@@ -113,8 +116,9 @@ const Plants = () => {
       description: "Glossy, hardy leaves, perfect for small indoor spaces.",
       price: 240,
       size: "small",
-      image_url: "/image/zzplant.png",
-      details: ["Low Light", "Moderate Watering", "Easy Care"]
+      image_url: "/image/ZZPlant.jpg",
+      details: ["Low Light", "Moderate Watering", "Easy Care"],
+      category: "indoor"
     },
     {
       id: 12,
@@ -122,8 +126,9 @@ const Plants = () => {
       description: "Beautiful white blooms. Purifies air and adds elegance to interiors.",
       price: 240,
       size: "medium",
-      image_url: "/image/zzplant.png",
-      details: ["Bright Light", "Minimal Water"]
+      image_url: "/image/Peacelily.jpg",
+      details: ["Bright Light", "Minimal Water"],
+      category: "indoor"
     },
     {
       id: 13,
@@ -131,8 +136,9 @@ const Plants = () => {
       description: "Brings prosperity and good fortune. Easy to care for indoor spaces.",
       price: 50,
       size: "small",
-      image_url: "/LandingPage/money_plant.jpg",
-      details: ["Partial Shade", "Low Water", "Indoor"]
+      image_url: "/image/Moneyplant1.png",
+      details: ["Partial Shade", "Low Water", "Indoor"],
+      category: "indoor"
     },
     {
       id: 14,
@@ -140,8 +146,9 @@ const Plants = () => {
       description: "Bold dark green leaves, ideal for decorative corners.",
       price: 250,
       size: "medium",
-      image_url: "/image/zzplant.png",
-      details: ["Shade", "High Humidity", "Indoor/Outdoor"]
+      image_url: "/image/Rubbervariegatedplant.jpg",
+      details: ["Shade", "High Humidity", "Indoor/Outdoor"],
+      category: "both"
     },
     {
       id: 15,
@@ -149,8 +156,9 @@ const Plants = () => {
       description: "Elegant arching leaves and baby offshoots. Very easy to care for.",
       price: 50,
       size: "small",
-      image_url: "/image/zzplant.png",
-      details: ["Climbing", "Full Sun", "Regular Water"]
+      image_url: "/image/Spiderplant.jpg",
+      details: ["Climbing", "Full Sun", "Regular Water"],
+      category: "both" // can grow indoor & outdoor
     },
     {
       id: 16,
@@ -158,8 +166,9 @@ const Plants = () => {
       description: "Colorful foliage that thrives in low light. Great for beginners.",
       price: 240,
       size: "medium",
-      image_url: "/image/coleus.png",
-      details: ["Low Light", "Moderate Watering", "Air Purifier"]
+      image_url: "/image/Aglaonema.jpg",
+      details: ["Low Light", "Moderate Watering", "Air Purifier"],
+      category: "indoor"
     },
     {
       id: 17,
@@ -167,8 +176,9 @@ const Plants = () => {
       description: "A stunning tropical plant known for its large, unique leaves. Perfect for home decoration.",
       price: 400,
       size: "small",
-      image_url: "/image/zzplant.png",
-      details: ["Bright Indirect", "Careful Watering", "Zen"]
+      image_url: "/image/Philodendron.jpg",
+      details: ["Bright Indirect", "Careful Watering", "Zen"],
+      category: "indoor"
     },
     {
       id: 18,
@@ -176,8 +186,9 @@ const Plants = () => {
       description: "Healing plant with a clean look. Needs very little water.",
       price: 50,
       size: "small",
-      image_url: "/image/cactus.png",
-      details: ["Low Light", "Moderate Watering", "Air Purifier"]
+      image_url: "/image/Aloevera.jpg",
+      details: ["Low Light", "Moderate Watering", "Air Purifier"],
+      category: "both" // can easily grow indoor or outdoor
     },
     {
       id: 19,
@@ -185,8 +196,9 @@ const Plants = () => {
       description: "Feathery foliage. Excellent air purifier and indoor greenery.",
       price: 240,
       size: "medium",
-      image_url: "/image/boston-fern.png",
-      details: ["Bright Indirect", "Regular Water", "Air Purifier"]
+      image_url: "/image/Bostonfern.jpg",
+      details: ["Bright Indirect", "Regular Water", "Air Purifier"],
+      category: "indoor"
     },
     {
       id: 20,
@@ -194,8 +206,9 @@ const Plants = () => {
       description: "Compact, elegant palm. Adds freshness to any room.",
       price: 150,
       size: "small",
-      image_url: "/image/bomboo-palm.png",
-      details: ["Full Sun", "Regular Water", "Climbing"]
+      image_url: "/image/Bamboopalm.webp",
+      details: ["Full Sun", "Regular Water", "Climbing"],
+      category: "outdoor"
     },
     {
       id: 21,
@@ -203,8 +216,9 @@ const Plants = () => {
       description: "Succulent plant, drought-tolerant, perfect for low-maintenance greenery.",
       price: 50,
       size: "small",
-      image_url: "/image/sedum.png",
-      details: ["Full Sun", "Minimal Water", "Easy Care"]
+      image_url: "/image/Scullent.webp",
+      details: ["Full Sun", "Minimal Water", "Easy Care"],
+      category: "outdoor"
     },
     {
       id: 22,
@@ -212,8 +226,9 @@ const Plants = () => {
       description: "Compact succulent with easy care. Great for desktops and indoor corners.",
       price: 50,
       size: "small",
-      image_url: "/image/sansevieria-hahnii.png",
-      details: ["Bright Light", "Minimal Water", "Easy Care"]
+      image_url: "/image/Snakeplant.jpg",
+      details: ["Bright Light", "Minimal Water", "Easy Care"],
+      category: "indoor"
     },
     {
       id: 23,
@@ -221,8 +236,9 @@ const Plants = () => {
       description: "Low-maintenance succulent. Ideal for sunny spots and easy care.",
       price: 50,
       size: "small",
-      image_url: "/image/cactus.png",
-      details: ["Full Sun", "Minimal Water", "Easy Care"]
+      image_url: "/image/Scullent.webp",
+      details: ["Full Sun", "Minimal Water", "Easy Care"],
+      category: "outdoor"
     },
     {
       id: 24,
@@ -230,11 +246,63 @@ const Plants = () => {
       description: "Compact succulent with spiky leaves. Very low maintenance and indoor-friendly.",
       price: 50,
       size: "small",
-      image_url: "/image/haworthia.png",
-      details: ["Bright Light", "Minimal Water", "Easy Care"]
+      image_url: "/image/Scullent.webp",
+      details: ["Bright Light", "Minimal Water", "Easy Care"],
+      category: "indoor"
     }
   ];
 
+const Plants = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSize, setSelectedSize] = useState('all');
+  const [selectedCare, setSelectedCare] = useState('all');
+  const [selectedEnvironment, setSelectedEnvironment] = useState('all'); // all | indoor | outdoor
+  const [showFilters, setShowFilters] = useState(false);
+  const [filteredPlants, setFilteredPlants] = useState([]);
+  const [quantities, setQuantities] = useState({});
+  const sectionRef = useRef(null);
+  const filterButtonRef = useRef(null);
+  const filterPanelRef = useRef(null);
+  const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
+
+  useEffect(() => {
+    if (!showFilters) return;
+
+    const onPointerDown = (e) => {
+      const target = e.target;
+      if (filterButtonRef.current?.contains(target)) return;
+      if (filterPanelRef.current?.contains(target)) return;
+      setShowFilters(false);
+    };
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('touchstart', onPointerDown, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('touchstart', onPointerDown);
+    };
+  }, [showFilters]);
+
+  const requireAuthOrOpenModal = (pendingItem, pendingType) => {
+    if (isAuthenticated) return true;
+    localStorage.setItem(
+      'pendingAddToCart',
+      JSON.stringify({ item: pendingItem, type: pendingType, ts: Date.now() })
+    );
+    navigate('/auth?mode=login');
+    return false;
+  };
+
+  const matchesEnvironment = (plant) => {
+    if (selectedEnvironment === 'all') return true;
+    // show "both" in both tabs
+    if (selectedEnvironment === 'indoor') return plant.category === 'indoor' || plant.category === 'both';
+    if (selectedEnvironment === 'outdoor') return plant.category === 'outdoor' || plant.category === 'both';
+    return true;
+  };
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -255,24 +323,22 @@ const Plants = () => {
   }, []);
 
   useEffect(() => {
-    let filtered = plants;
-
-    // Debug: Log initial plants count
-    console.log('Total plants available:', plants.length);
+    let filtered = PLANTS;
 
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(plant =>
         plant.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      console.log('After search filter:', filtered.length);
     }
 
     // Size filter
     if (selectedSize !== 'all') {
       filtered = filtered.filter(plant => plant.size === selectedSize);
-      console.log('After size filter:', filtered.length);
     }
+
+    // Indoor / Outdoor filter (includes "both" in both)
+    filtered = filtered.filter(matchesEnvironment);
 
     // Price category filter
     if (selectedCare !== 'all') {
@@ -291,12 +357,11 @@ const Plants = () => {
             return true;
         }
       });
-      console.log('After price filter:', filtered.length);
     }
 
 
     setFilteredPlants(filtered);
-  }, [searchTerm, selectedSize, selectedCare]);
+  }, [searchTerm, selectedSize, selectedCare, selectedEnvironment]);
 
   const updateQuantity = (plantId, change) => {
     setQuantities(prev => ({
@@ -305,14 +370,20 @@ const Plants = () => {
     }));
   };
 
-  const handleOrderNow = (plant) => {
+  const handleOrderNow = async (plant) => {
     const quantity = quantities[plant.id] || 1;
     // Add the plant with the correct quantity (not in a loop)
     const plantWithQuantity = {
       ...plant,
       quantity: quantity
     };
-    addToCart(plantWithQuantity, 'plant');
+    if (!requireAuthOrOpenModal(plantWithQuantity, 'plant')) return;
+    const result = await addToCart(plantWithQuantity, 'plant');
+    setToast({
+      isVisible: true,
+      message: result?.success ? 'Added to cart successfully!' : (result?.message || 'Failed to add to cart'),
+      type: result?.success ? 'success' : 'error'
+    });
     
     // Reset quantity after adding to cart
     setQuantities(prev => ({
@@ -322,7 +393,7 @@ const Plants = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white lazy-load">
       <ScrollToTop />
       
       {/* Header */}
@@ -349,7 +420,7 @@ const Plants = () => {
       <Header/>
 
       {/* Hero Section with Video Background */}
-      <section className="relative h-[75vh] overflow-hidden pt-10">
+      <section className="relative h-[60vh] md:h-[75vh] overflow-hidden pt-10">
         {/* Video Background with Fallback */}
         <div className="absolute inset-0 z-0">
           <video
@@ -419,8 +490,31 @@ const Plants = () => {
       </section>
 
       {/* Search and Filter Section */}
-      <section className="py-8 bg-white border-b border-gray-100">
+      <section className="py-8 bg-white border-b border-gray-100 lazy-load">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          {/* Indoor / Outdoor Bar */}
+          <div className="flex items-center justify-center mb-6">
+            <div className="inline-flex bg-gray-100 p-1 rounded-2xl border border-gray-200">
+              {[
+                { value: 'all', label: 'All Plants' },
+                { value: 'indoor', label: 'Indoor Plants' },
+                { value: 'outdoor', label: 'Outdoor Plants' }
+              ].map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => setSelectedEnvironment(tab.value)}
+                  className={`px-5 py-2 rounded-2xl text-sm font-semibold transition-all duration-200 ${
+                    selectedEnvironment === tab.value
+                      ? 'bg-white text-green-700 shadow-sm'
+                      : 'text-gray-600 hover:text-green-700'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             {/* Search Bar */}
             <div className="relative flex-1 w-full">
@@ -437,6 +531,7 @@ const Plants = () => {
             {/* Filter Toggle */}
             <div className="relative">
               <button
+                ref={filterButtonRef}
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center space-x-2 px-6 py-3 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors duration-300"
               >
@@ -446,13 +541,28 @@ const Plants = () => {
 
               {/* Compact Filter Popup */}
               {showFilters && (
-                <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
+                <>
+                  {/* Mobile backdrop (tap outside to close) */}
+                  <button
+                    type="button"
+                    aria-label="Close filters"
+                    className="md:hidden fixed inset-0 z-40 bg-black/30"
+                    onClick={() => setShowFilters(false)}
+                  />
+
+                  {/* Panel: bottom sheet on mobile, anchored dropdown on md+ */}
+                  <div
+                    ref={filterPanelRef}
+                    className="fixed z-50 left-4 right-4 bottom-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-h-[80vh]
+                           md:absolute md:inset-auto md:left-auto md:right-0 md:bottom-auto md:top-full md:mt-2 md:w-80 md:rounded-xl md:max-h-none"
+                  >
               {/* Filter Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
                 <button
                   onClick={() => {
                     setSelectedSize('all');
                     setSelectedCare('all');
+                    setSelectedEnvironment('all');
                     setSearchTerm('');
                   }}
                   className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
@@ -469,7 +579,35 @@ const Plants = () => {
               </div>
 
               {/* Filter Options */}
-              <div className="p-4 space-y-4">
+              <div className="p-4 space-y-4 overflow-auto lazy-load">
+                {/* Indoor / Outdoor Filter */}
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Plant Type</h4>
+                  <div className="space-y-2">
+                    {[
+                      { value: 'all', label: 'All Plants' },
+                      { value: 'indoor', label: 'Indoor Plants' },
+                      { value: 'outdoor', label: 'Outdoor Plants' }
+                    ].map((env) => (
+                      <label key={env.value} className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="environment"
+                          value={env.value}
+                          checked={selectedEnvironment === env.value}
+                          onChange={(e) => setSelectedEnvironment(e.target.value)}
+                          className="w-4 h-4 text-green-500 focus:ring-green-300"
+                        />
+                        <span className={`text-sm transition-colors duration-200 group-hover:text-green-600 ${
+                          selectedEnvironment === env.value ? 'text-green-600 font-medium' : 'text-gray-600'
+                        }`}>
+                          {env.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Size Filter */}
                 <div>
                   <h4 className="text-sm font-semibold text-gray-700 mb-3">Plant Size</h4>
@@ -529,7 +667,8 @@ const Plants = () => {
                   </div>
                 </div>
               </div>
-                </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -537,7 +676,7 @@ const Plants = () => {
       </section>
 
       {/* Plants Grid */}
-      <section className="relative py-2 bg-white min-h-[60vh] overflow-hidden pb-20">
+      <section className="relative py-2 bg-white min-h-[60vh] overflow-hidden pb-20 lazy-load">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-10 animate-float">
@@ -560,7 +699,7 @@ const Plants = () => {
           </div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 lazy-load">
           <div ref={sectionRef} className="opacity-0 transform translate-y-8">
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -573,13 +712,13 @@ const Plants = () => {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredPlants.map((plant, index) => (
                 <div
                   key={plant.id}
                   className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-100 relative"
                   style={{
-                    animationDelay: `${index * 0.1}s`
+                    animationDelay: `${0.1}s`
                   }}
                 >
                   {/* Plant Image */}
@@ -615,7 +754,7 @@ const Plants = () => {
                     {/* Care Details */}
                     <div className="mb-4">
                       <div className="flex flex-wrap gap-2">
-                        {plant.details.slice(0, 3).map((detail, idx) => (
+                        {plant.details.map((detail, idx) => (
                           <div key={idx} className="flex items-center space-x-1 text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
                             {detail.includes('Sun') || detail.includes('Light') ? (
                               <Sun className="h-3 w-3 text-yellow-500" />
@@ -634,8 +773,11 @@ const Plants = () => {
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <span className="text-xl font-bold text-green-600">₹{plant.price.toLocaleString()}</span>
-                        <span className="text-gray-500 ml-1 text-sm">{plant.size}</span>
+                        <span className="text-gray-500 ml-2 text-sm capitalize">{plant.size}</span>
                       </div>
+                      <span className="text-xs font-semibold px-2 py-1 rounded-full bg-green-50 text-green-700 capitalize border border-green-100">
+                        {plant.category === 'both' ? 'indoor & outdoor' : plant.category}
+                      </span>
                     </div>
 
                     {/* Quantity Controls */}
@@ -687,6 +829,13 @@ const Plants = () => {
 
       {/* Footer */}
       <Footer />
+
+      <Toast
+        isVisible={toast.isVisible}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ isVisible: false, message: '', type: 'success' })}
+      />
     </div>
   );
 };

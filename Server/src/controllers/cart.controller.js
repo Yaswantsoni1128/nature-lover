@@ -39,7 +39,8 @@ const cartController = {
             const { itemId, name, type, price, quantity = 1, image, category } = req.body;
 
             // Validation
-            if (!itemId || !name || !type || !price) {
+            // NOTE: price can be 0 for services (to be discussed), so don't treat 0 as missing.
+            if (!itemId || !name || !type || price === undefined || price === null) {
                 return res.status(400).json(
                     new ApiError(400, "Missing required fields: itemId, name, type, price")
                 );

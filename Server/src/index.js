@@ -11,9 +11,6 @@ connectDB()
         })
         app.listen(process.env.PORT, () => {
             console.log(`Server is running on port ${process.env.PORT}`);
-            
-            // Start self-ping service to keep server awake on Render
-            selfPing.start();
         });
     })
     .catch((err) => {

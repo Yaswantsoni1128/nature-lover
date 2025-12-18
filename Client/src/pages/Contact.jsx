@@ -173,19 +173,19 @@ const Contact = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {/* Email Contact */}
             <div 
-              className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 p-6 border border-green-100 cursor-pointer"
+              className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1.5 p-5 border border-green-100 cursor-pointer"
               onClick={() => window.open('mailto:naturelovers636@gmail.com', '_blank')}
             >
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Mail className="h-8 w-8 text-white" />
+              <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Mail className="h-7 w-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-green-800 mb-4 group-hover:text-green-600 transition-colors duration-300">
+              <h3 className="text-lg font-bold text-green-800 mb-3 group-hover:text-green-600 transition-colors duration-300">
                 Email Us
               </h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <p className="text-gray-600 mb-4 leading-relaxed text-sm">
                 Send us your questions and we'll get back to you within 24 hours.
               </p>
-              <div className="inline-flex items-center space-x-2 text-blue-600 font-semibold transition-colors duration-300 group/link">
+              <div className="inline-flex items-center space-x-2 text-blue-600 font-semibold transition-colors duration-300 group/link text-sm">
                 <span>naturelovers636@gmail.com</span>
                 <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform duration-300" />
               </div>
@@ -193,19 +193,19 @@ const Contact = () => {
 
             {/* Phone Contact */}
             <div 
-              className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 p-6 border border-green-100 cursor-pointer"
+              className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1.5 p-5 border border-green-100 cursor-pointer"
               onClick={() => window.open('tel:+919509899906', '_self')}
             >
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Phone className="h-8 w-8 text-white" />
+              <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-green-500 to-green-600 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Phone className="h-7 w-7 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-green-800 mb-4 group-hover:text-green-600 transition-colors duration-300">
+              <h3 className="text-lg font-bold text-green-800 mb-3 group-hover:text-green-600 transition-colors duration-300">
                 Call Us
               </h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <p className="text-gray-600 mb-4 leading-relaxed text-sm">
                 Speak directly with our plant experts for immediate assistance.
               </p>
-              <div className="inline-flex items-center space-x-2 text-green-600 font-semibold transition-colors duration-300 group/link">
+              <div className="inline-flex items-center space-x-2 text-green-600 font-semibold transition-colors duration-300 group/link text-sm">
                 <span>+91 9509899906</span>
                 <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform duration-300" />
               </div>
@@ -213,19 +213,19 @@ const Contact = () => {
 
             {/* Location Contact */}
             <div 
-              className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 p-6 border border-green-100 md:col-span-2 lg:col-span-1 cursor-pointer"
+              className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1.5 p-5 border border-green-100 md:col-span-2 lg:col-span-1 cursor-pointer"
               onClick={() => window.open('https://maps.google.com/?q=House+No.1,+8th+Floor,+AARCITY+D-Block,+sec.9-11,+Hisar', '_blank')}
             >
-              <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-2xl">📍</span>
+              <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-xl">📍</span>
               </div>
-              <h3 className="text-xl font-bold text-green-800 mb-4 group-hover:text-green-600 transition-colors duration-300">
+              <h3 className="text-lg font-bold text-green-800 mb-3 group-hover:text-green-600 transition-colors duration-300">
                 Visit Us
               </h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <p className="text-gray-600 mb-4 leading-relaxed text-sm">
                 Come visit our nursery and see our beautiful plant collection in person.
               </p>
-              <div className="text-purple-600 font-semibold group-hover:text-purple-700 transition-colors duration-300">
+              <div className="text-purple-600 font-semibold group-hover:text-purple-700 transition-colors duration-300 text-sm">
                 <p>House No.1, 8th Floor</p>
                 <p>AARCITY D-Block</p>
                 <p>Sec.9-11, Hisar</p>

@@ -8,6 +8,7 @@ import Home from "./pages/Home.jsx";
 import Services from "./pages/Services.jsx";
 import Plants from "./pages/Plants.jsx";
 import Contact from "./pages/Contact.jsx";
+import Auth from "./pages/Auth.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import Orders from "./pages/Orders.jsx";
@@ -25,8 +26,9 @@ const App = () => {
               <Route path="/services" element={<Services />} />
               <Route path="/plants" element={<Plants />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/register" element={<Auth />} />
+              <Route path="/login" element={<Auth />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/cart" element={<Cart />} />
             </Routes>

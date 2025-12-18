@@ -1,21 +1,56 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Phone, Mail, Sparkles, Star, Zap, Shield, Award, Check, Search, Filter, ShoppingCart, Plus, Minus } from 'lucide-react';
+import { Sparkles, Star, Zap, Check, Search, Filter, ShoppingCart } from 'lucide-react';
 import ScrollToTop from '../utils/ScrollToTop';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useCart } from '../contexts/CartContext.jsx';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
+import Toast from '../components/Toast';
 
 const Services = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedPrice, setSelectedPrice] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
   const [quantities, setQuantities] = useState({});
   const sectionRef = useRef(null);
   const heroRef = useRef(null);
+  const filterButtonRef = useRef(null);
+  const filterPanelRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
+
+  useEffect(() => {
+    if (!showFilters) return;
+
+    const onPointerDown = (e) => {
+      const target = e.target;
+      if (filterButtonRef.current?.contains(target)) return;
+      if (filterPanelRef.current?.contains(target)) return;
+      setShowFilters(false);
+    };
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('touchstart', onPointerDown, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('touchstart', onPointerDown);
+    };
+  }, [showFilters]);
+
+  const requireAuthOrOpenModal = (pendingItem, pendingType) => {
+    if (isAuthenticated) return true;
+    localStorage.setItem(
+      'pendingAddToCart',
+      JSON.stringify({ item: pendingItem, type: pendingType, ts: Date.now() })
+    );
+    navigate('/auth?mode=login');
+    return false;
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -59,7 +94,7 @@ const Services = () => {
         "Edge trimming", 
         "Grass collection"
       ],
-      price: 2500,
+      // price: 2500,
       period: "per service",
       badge: "Popular",
       category: "maintenance"
@@ -74,7 +109,7 @@ const Services = () => {
         "Tree removal",
         "Health assessments"
       ],
-      price: 6200,
+      // price: 6200,
       period: "per service",
       badge: "Expert",
       category: "tree"
@@ -89,7 +124,7 @@ const Services = () => {
         "Soil preparation",
         "Professional planting"
       ],
-      price: 4200,
+      // price: 4200,
       period: "per service",
       badge: "New",
       category: "planting"
@@ -104,7 +139,7 @@ const Services = () => {
         "Weed control",
         "Lawn aeration"
       ],
-      price: 3300,
+      // price: 3300,
       period: "per treatment",
       badge: "Best Value",
       category: "maintenance"
@@ -119,7 +154,7 @@ const Services = () => {
         "Shape maintenance",
         "Debris cleanup"
       ],
-      price: 2900,
+      // price: 2900,
       period: "per service",
       badge: "Popular",
       category: "maintenance"
@@ -134,7 +169,7 @@ const Services = () => {
         "Debris clearing",
         "Seasonal cleanup"
       ],
-      price: 3800,
+      // price: 3800,
       period: "per visit",
       badge: "Seasonal",
       category: "maintenance"
@@ -149,7 +184,7 @@ const Services = () => {
         "Plant installation",
         "Hardscape features"
       ],
-      price: 16500,
+      // price: 16500,
       period: "per project",
       badge: "Premium",
       category: "design"
@@ -171,27 +206,8 @@ const Services = () => {
       filtered = filtered.filter(service => service.category === selectedCategory);
     }
 
-    // Price filter
-    if (selectedPrice !== 'all') {
-      filtered = filtered.filter(service => {
-        const price = service.price;
-        switch (selectedPrice) {
-          case 'budget':
-            return price >= 0 && price <= 3000;
-          case 'affordable':
-            return price > 3000 && price <= 6000;
-          case 'premium':
-            return price > 6000 && price <= 12000;
-          case 'luxury':
-            return price > 12000;
-          default:
-            return true;
-        }
-      });
-    }
-
     setFilteredServices(filtered);
-  }, [searchTerm, selectedCategory, selectedPrice]);
+  }, [searchTerm, selectedCategory]);
 
   const updateQuantity = (serviceId, change) => {
     setQuantities(prev => ({
@@ -200,14 +216,20 @@ const Services = () => {
     }));
   };
 
-  const handleOrderNow = (service) => {
+  const handleOrderNow = async (service) => {
     const quantity = quantities[service.id] || 1;
     // Add the service with the correct quantity (not in a loop)
     const serviceWithQuantity = {
       ...service,
       quantity: quantity
     };
-    addToCart(serviceWithQuantity, 'service');
+    if (!requireAuthOrOpenModal(serviceWithQuantity, 'service')) return;
+    const result = await addToCart(serviceWithQuantity, 'service');
+    setToast({
+      isVisible: true,
+      message: result?.success ? 'Added to cart successfully!' : (result?.message || 'Failed to add to cart'),
+      type: result?.success ? 'success' : 'error'
+    });
     
     // Reset quantity after adding to cart
     setQuantities(prev => ({
@@ -217,7 +239,7 @@ const Services = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white lazy-load">
       <ScrollToTop />
       
       <Header />
@@ -311,6 +333,7 @@ const Services = () => {
             {/* Filter Toggle */}
             <div className="relative">
               <button
+                ref={filterButtonRef}
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center space-x-2 px-6 py-3 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors duration-300"
               >
@@ -320,13 +343,26 @@ const Services = () => {
 
               {/* Compact Filter Popup */}
               {showFilters && (
-                <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
+                <>
+                  {/* Mobile backdrop (tap outside to close) */}
+                  <button
+                    type="button"
+                    aria-label="Close filters"
+                    className="md:hidden fixed inset-0 z-40 bg-black/30"
+                    onClick={() => setShowFilters(false)}
+                  />
+
+                  {/* Panel: bottom sheet on mobile, anchored dropdown on md+ */}
+                  <div
+                    ref={filterPanelRef}
+                    className="fixed z-50 left-4 right-4 bottom-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-h-[80vh]
+                           md:absolute md:inset-auto md:left-auto md:right-0 md:bottom-auto md:top-full md:mt-2 md:w-80 md:rounded-xl md:max-h-none"
+                  >
                   {/* Filter Header */}
                   <div className="flex items-center justify-between p-4 border-b border-gray-100">
                     <button
                       onClick={() => {
                         setSelectedCategory('all');
-                        setSelectedPrice('all');
                         setSearchTerm('');
                       }}
                       className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
@@ -343,7 +379,7 @@ const Services = () => {
                   </div>
 
                   {/* Filter Options */}
-                  <div className="p-4 space-y-4">
+                  <div className="p-4 space-y-4 overflow-auto">
                     {/* Category Filter */}
                     <div>
                       <h4 className="text-sm font-semibold text-gray-700 mb-3">Service Category</h4>
@@ -373,38 +409,9 @@ const Services = () => {
                         ))}
                       </div>
                     </div>
-
-                    {/* Price Range Filter */}
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-700 mb-3">Price Range</h4>
-                      <div className="space-y-2">
-                        {[
-                          { value: 'all', label: 'All Prices' },
-                          { value: 'budget', label: 'Budget (₹0 - ₹3,000)' },
-                          { value: 'affordable', label: 'Affordable (₹3,000 - ₹6,000)' },
-                          { value: 'premium', label: 'Premium (₹6,000 - ₹12,000)' },
-                          { value: 'luxury', label: 'Luxury (₹12,000+)' }
-                        ].map((price) => (
-                          <label key={price.value} className="flex items-center space-x-3 cursor-pointer group">
-                            <input
-                              type="radio"
-                              name="price"
-                              value={price.value}
-                              checked={selectedPrice === price.value}
-                              onChange={(e) => setSelectedPrice(e.target.value)}
-                              className="w-4 h-4 text-green-500 focus:ring-green-300"
-                            />
-                            <span className={`text-sm transition-colors duration-200 group-hover:text-green-600 ${
-                              selectedPrice === price.value ? 'text-green-600 font-medium' : 'text-gray-600'
-                            }`}>
-                              {price.label}
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
                   </div>
-                </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -473,14 +480,6 @@ const Services = () => {
                       </div>
                     </div>
 
-                    {/* Price and Order */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <span className="text-xl font-bold text-green-600">₹{service.price.toLocaleString()}</span>
-                        <span className="text-gray-500 ml-1 text-sm">{service.period}</span>
-                      </div>
-                    </div>
-
                     {/* Quantity Controls */}
                     {/* <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-semibold text-gray-700">Quantity:</span>
@@ -530,6 +529,13 @@ const Services = () => {
 
       {/* Footer */}
       <Footer />
+
+      <Toast
+        isVisible={toast.isVisible}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ isVisible: false, message: '', type: 'success' })}
+      />
     </div>
   );
 };

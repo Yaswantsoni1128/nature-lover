@@ -51,9 +51,11 @@ export const CartProvider = ({ children }) => {
     try {
       const cartItem = {
         itemId: item.id.toString(),
-        name: item.name,
+        // Plants use `name`, services use `title`.
+        name: item.name || item.title,
         type,
-        price: item.price,
+        // Services don't have fixed prices yet; store 0 in DB (server requires number).
+        price: typeof item.price === 'number' ? item.price : 0,
         quantity: item.quantity || 1,
         image: item.image || item.image_url,
         category: item.category
@@ -65,7 +67,10 @@ export const CartProvider = ({ children }) => {
         setCartItems(response.data.data.items || []);
         // Also save to localStorage as backup
         localStorage.setItem('natureLoversCart', JSON.stringify(response.data.data.items || []));
+        return { success: true };
       }
+
+      return { success: false, message: response.data?.message || 'Failed to add to cart' };
     } catch (error) {
       console.error('Error adding to cart:', error);
       // Fallback to local state
@@ -84,6 +89,9 @@ export const CartProvider = ({ children }) => {
           return [...prevItems, { ...item, type, quantity: item.quantity || 1 }];
         }
       });
+
+      // still report success to UI since we added locally
+      return { success: true, fallback: true };
     }
   };
 
@@ -175,7 +183,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cartItems.reduce((total, item) => {
+      const price = typeof item.price === 'number' ? item.price : 0;
+      return total + price * item.quantity;
+    }, 0);
   };
 
   const getItemCount = () => {

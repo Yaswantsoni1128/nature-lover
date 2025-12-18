@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import Header from '../components/Header';
@@ -24,10 +24,19 @@ const Cart = () => {
   } = useCart();
   
   const { isAuthenticated, user } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
+
+  useEffect(() => {
+    const msg = localStorage.getItem('toastAfterNav');
+    if (msg) {
+      localStorage.removeItem('toastAfterNav');
+      setToast({ isVisible: true, message: msg, type: 'success' });
+    }
+  }, [location.key]);
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
@@ -145,11 +154,17 @@ const Cart = () => {
     
     orderText += `🛒 *Order Items:*\n`;
     cartItems.forEach((item, index) => {
+      const hasNumericPrice = typeof item.price === 'number' && item.price > 0;
       orderText += `${index + 1}. ${item.name}\n`;
       orderText += `   Type: ${item.type}\n`;
       orderText += `   Quantity: ${item.quantity}\n`;
-      orderText += `   Price: ₹${item.price.toLocaleString()}\n`;
-      orderText += `   Subtotal: ₹${(item.price * item.quantity).toLocaleString()}\n\n`;
+      if (!hasNumericPrice) {
+        orderText += `   Price: to be discussed with the owner\n`;
+        orderText += `   Subtotal: to be discussed with the owner\n\n`;
+      } else {
+        orderText += `   Price: ₹${item.price.toLocaleString()}\n`;
+        orderText += `   Subtotal: ₹${(item.price * item.quantity).toLocaleString()}\n\n`;
+      }
     });
     
     orderText += `💰 *Order Summary:*\n`;
@@ -230,19 +245,19 @@ const Cart = () => {
       <div className="py-12 pt-24">
         <div className="max-w-5xl mx-auto px-4 lg:px-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+            <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
               <Link
                 to="/"
                 className="flex items-center space-x-2 text-green-600 hover:text-green-700 transition-colors duration-300 text-sm"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>Continue Shopping</span>
+                <span className="truncate">Continue Shopping</span>
               </Link>
             </div>
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-green-800">Shopping Cart</h1>
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">
+            <div className="flex items-center justify-between sm:justify-end gap-3">
+              <h1 className="text-xl sm:text-2xl font-bold text-green-800">Shopping Cart</h1>
+              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold shrink-0">
                 {getTotalItems()} items
               </span>
             </div>
@@ -300,7 +315,9 @@ const Cart = () => {
                             {item.type} • {item.category || 'General'}
                           </p>
                           <p className="text-sm font-bold text-green-600">
-                            ₹{item.price.toLocaleString()}
+                            {typeof item.price !== 'number' || item.price <= 0
+                              ? 'to be discussed with the owner'
+                              : `₹${item.price.toLocaleString()}`}
                           </p>
                         </div>
 
@@ -339,7 +356,9 @@ const Cart = () => {
                         <div className="flex justify-between items-center">
                           <span className="text-xs text-gray-600">Item Total:</span>
                           <span className="text-sm font-bold text-green-600">
-                            ₹{(item.price * item.quantity).toLocaleString()}
+                            {typeof item.price !== 'number' || item.price <= 0
+                              ? 'to be discussed with the owner'
+                              : `₹${(item.price * item.quantity).toLocaleString()}`}
                           </span>
                         </div>
                       </div>

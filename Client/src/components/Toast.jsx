@@ -6,7 +6,7 @@ const Toast = ({
   message, 
   type = 'success', 
   onClose, 
-  duration = 5000 
+  duration = 2000 
 }) => {
   useEffect(() => {
     if (isVisible && duration > 0) {

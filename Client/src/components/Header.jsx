@@ -38,9 +38,7 @@ const Header = () => {
         { name: 'Home', href: '/' },
         { name: 'Services', href: '/services' },
         { name: 'Buy Plants', href: '/plants' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Login', href: '/login' },
-        { name: 'Register', href: '/register' }
+        { name: 'Contact', href: '/contact' }
       ];
 
   return (
@@ -79,20 +77,33 @@ const Header = () => {
                 </Link>
               );
             })}
+
+            {/* Single Login/Register Button (unauthenticated only) */}
+            {!isAuthenticated && (
+              <button
+                onClick={() => navigate('/auth?mode=login')}
+                className="px-5 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors"
+                type="button"
+              >
+                Login
+              </button>
+            )}
             
-               {/* Cart Icon */}
-               <Link
-                 to="/cart"
-                 className="relative flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
-               >
-                 <ShoppingCart className="h-5 w-5" />
-                 <span>Cart</span>
-                 {getTotalItems() > 0 && (
-                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                     {getTotalItems()}
-                   </span>
-                 )}
-               </Link>
+               {/* Cart Icon (authenticated only) */}
+               {isAuthenticated && (
+                 <Link
+                   to="/cart"
+                   className="relative flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors duration-200"
+                 >
+                   <ShoppingCart className="h-5 w-5" />
+                   <span>Cart</span>
+                   {getTotalItems() > 0 && (
+                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                       {getTotalItems()}
+                     </span>
+                   )}
+                 </Link>
+               )}
 
                {/* Logout Button for Authenticated Users */}
                {isAuthenticated && (
@@ -136,21 +147,39 @@ const Header = () => {
                   </Link>
                 );
               })}
+
+              {/* Mobile Single Login/Register (unauthenticated only) */}
+              {!isAuthenticated && (
+                <div className="pt-2 space-y-2">
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/auth?mode=login');
+                    }}
+                    className="w-full px-4 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors"
+                    type="button"
+                  >
+                    Login
+                  </button>
+                </div>
+              )}
               
-                   {/* Mobile Cart Link */}
-                   <Link
-                     to="/cart"
-                     className="flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors duration-200 py-2"
-                     onClick={() => setIsMenuOpen(false)}
-                   >
-                     <ShoppingCart className="h-4 w-4" />
-                     <span>Cart</span>
-                     {getTotalItems() > 0 && (
-                       <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold ml-2">
-                         {getTotalItems()}
-                       </span>
-                     )}
-                   </Link>
+                   {/* Mobile Cart Link (authenticated only) */}
+                   {isAuthenticated && (
+                     <Link
+                       to="/cart"
+                       className="flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors duration-200 py-2"
+                       onClick={() => setIsMenuOpen(false)}
+                     >
+                       <ShoppingCart className="h-4 w-4" />
+                       <span>Cart</span>
+                       {getTotalItems() > 0 && (
+                         <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold ml-2">
+                           {getTotalItems()}
+                         </span>
+                       )}
+                     </Link>
+                   )}
 
                    {/* Mobile Logout Button for Authenticated Users */}
                    {isAuthenticated && (
@@ -166,6 +195,7 @@ const Header = () => {
           </div>
         )}
       </nav>
+
     </header>
   );
 };
