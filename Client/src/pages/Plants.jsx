@@ -396,27 +396,6 @@ const Plants = () => {
     <div className="min-h-screen bg-white lazy-load">
       <ScrollToTop />
       
-      {/* Header */}
-      {/* <header className="bg-white shadow-sm border-b border-green-100">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="bg-green-500 p-2 rounded-full">
-                <span className="text-white font-bold text-lg">🌿</span>
-              </div>
-              <span className="text-2xl font-bold text-green-600">Nature Lovers</span>
-            </div>
-            
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-gray-700 hover:text-green-600 transition-colors duration-200">Home</a>
-              <a href="/services" className="text-gray-700 hover:text-green-600 transition-colors duration-200">Services</a>
-              <a href="/plants" className="text-green-600 border-b-2 border-green-600 font-medium">Buy Plants</a>
-              <a href="/register" className="text-gray-700 hover:text-green-600 transition-colors duration-200">Register</a>
-              <a href="#contact" className="text-gray-700 hover:text-green-600 transition-colors duration-200">Contact</a>
-            </nav>
-          </div>
-        </div>
-      </header> */}
       <Header/>
 
       {/* Hero Section with Video Background */}
@@ -428,6 +407,7 @@ const Plants = () => {
             muted
             loop
             playsInline
+            poster="/LandingPage/land_scaping.jpg"
             className="w-full h-full object-cover"
             onError={(e) => {
               console.log('Video failed to load, using fallback image');
@@ -726,6 +706,8 @@ const Plants = () => {
                     <img
                       src={plant.image_url}
                       alt={plant.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       onError={(e) => {
                         console.log(`Image failed to load for ${plant.name}:`, plant.image_url);
