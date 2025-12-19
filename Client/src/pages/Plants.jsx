@@ -685,7 +685,7 @@ const Plants = () => {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 lazy-load">
-          <div ref={sectionRef} >
+          <div ref={sectionRef}>
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-green-800 mb-2">
