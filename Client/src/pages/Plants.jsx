@@ -268,6 +268,11 @@ const Plants = () => {
   const navigate = useNavigate();
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
 
+    useEffect(() => {
+    setFilteredPlants(PLANTS);
+  }, []);
+
+
   useEffect(() => {
     if (!showFilters) return;
 
@@ -680,7 +685,7 @@ const Plants = () => {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 lazy-load">
-          <div ref={sectionRef} className="opacity-0 transform translate-y-8">
+          <div ref={sectionRef} >
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-green-800 mb-2">
@@ -697,9 +702,6 @@ const Plants = () => {
                 <div
                   key={plant.id}
                   className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-100 relative"
-                  style={{
-                    animationDelay: `${0.1}s`
-                  }}
                 >
                   {/* Plant Image */}
                   <div className="relative h-48 overflow-hidden">
