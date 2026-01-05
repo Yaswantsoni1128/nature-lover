@@ -17,7 +17,7 @@ const getModeFromSearch = (search) => {
 const Auth = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { login, register, isAuthenticated } = useAuth();
+  const { login, register, isAuthenticated, user } = useAuth();
   const { addToCart } = useCart();
 
   const [mode, setMode] = useState(() => getModeFromSearch(location.search));
@@ -41,9 +41,15 @@ const Auth = () => {
   }, [location.search]);
 
   useEffect(() => {
-    // If already logged in, go to orders
-    if (isAuthenticated) navigate('/orders');
-  }, [isAuthenticated, navigate]);
+    // If already logged in, redirect based on role
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/orders');
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
 
   useEffect(() => {
     setError('');
@@ -82,7 +88,12 @@ const Auth = () => {
         localStorage.removeItem('pendingCheckout');
         navigate('/cart');
       } else {
-        navigate('/orders');
+        // Redirect based on user role
+        if (result.user?.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/orders');
+        }
       }
     } else {
       setError(result.message || 'Login failed');
@@ -132,7 +143,12 @@ const Auth = () => {
         localStorage.removeItem('pendingCheckout');
         navigate('/cart');
       } else {
-        navigate('/orders');
+        // Redirect based on user role
+        if (result.user?.role === 'admin') {
+          navigate('/admin/dashboard');
+        } else {
+          navigate('/orders');
+        }
       }
     } else {
       setError(result.message || 'Registration failed');

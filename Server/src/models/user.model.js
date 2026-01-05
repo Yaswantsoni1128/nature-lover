@@ -93,6 +93,13 @@ userSchema.methods.getResetPasswordToken= function(){
     return resetToken;
 };
 
+// Virtual field for fullName (maps to name)
+userSchema.virtual('fullName').get(function() {
+    return this.name;
+});
+
+// Ensure virtuals are included in JSON
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
+
 export const User = mongoose.model("User", userSchema);
-
-

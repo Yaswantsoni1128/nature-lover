@@ -32,7 +32,8 @@ export const AuthProvider = ({ children }) => {
       if (token && !authCheckInProgress) {
         setAuthCheckInProgress(true);
         try {
-          const response = await api.get('/api/user/me');
+          const response = await api.get('/api/user/current-user');
+          console.log('Current user response:', response.data);
           setUser(response.data.user);
         } catch (error) {
           console.error('Auth check failed:', error);
@@ -66,12 +67,15 @@ export const AuthProvider = ({ children }) => {
       
       const { accessToken, user: userData } = response.data;
       
+      console.log('Login successful:', { accessToken, userData });
+      
       localStorage.setItem('accessToken', accessToken);
       setToken(accessToken);
       setUser(userData);
       
-      return { success: true };
+      return { success: true, user: userData };
     } catch (error) {
+      console.error('Login error:', error);
       return { 
         success: false, 
         message: error.response?.data?.message || 'Login failed' 

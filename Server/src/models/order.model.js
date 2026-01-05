@@ -72,6 +72,16 @@ const orderSchema = new mongoose.Schema({
   },
   whatsappMessageId: {
     type: String
+  },
+  emailSent: {
+    type: Boolean,
+    default: false
+  },
+  estimatedDeliveryDate: {
+    type: Date
+  },
+  adminNotes: {
+    type: String
   }
 }, {
   timestamps: true

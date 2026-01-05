@@ -20,6 +20,7 @@ router.post("/reset-password", validateResetPassword, userController.resetPasswo
 
 // PROTECTED ROUTES USED VALIDATOR
 router.get("/me", validateJWT, userController.getCurrentUser);
+router.get("/current-user", validateJWT, userController.getCurrentUser);
 router.put("/me", validateJWT, userController.updateCurrentUser);
 router.delete("/me", validateJWT, userController.deleteUser);
 

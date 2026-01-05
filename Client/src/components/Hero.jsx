@@ -66,9 +66,9 @@ const Hero = () => {
         <div ref={heroRef} className="opacity-0 transform translate-y-8">
           {/* Option 1: White text with shadow for contrast */}
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
-            Transform Your Garden Into{' '}
+            Bring the Nature to Your{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600 drop-shadow-lg">
-              Paradise
+              Home
             </span>
           </h1>
           

@@ -54,7 +54,7 @@ const Services = () => {
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div ref={sectionRef} className="opacity-0 transform translate-y-8 text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-4">
-            Our Premium{' '}
+            Our {' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-800">
               Services
             </span>

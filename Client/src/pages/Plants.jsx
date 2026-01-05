@@ -450,15 +450,11 @@ const Plants = () => {
         <div className="relative z-20 h-full flex items-center justify-center">
           <div className="max-w-7xl mx-auto px-4 lg:px-8 text-center">
             <div className="animate-fade-in-up">
-              <div className="inline-block mb-4">
-                <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                  🌱 Premium Plants
-                </span>
-              </div>
+              
               
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-lg">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-green-400">
-                  Premium Plants
+                Plants
                 </span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-200 to-green-300">

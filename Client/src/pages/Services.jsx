@@ -84,110 +84,198 @@ const Services = () => {
   }, []);
 
   const services = [
+    // ========================================
+    // PARK & LAWN SERVICES
+    // For parks, societies, farmhouses, large gardens
+    // ========================================
     {
       id: 1,
       title: "Grass Cutting",
-      description: "Professional lawn mowing and maintenance services to keep your grass healthy and perfectly manicured. We use quality equipment and techniques for the best results.",
+      description: "Professional lawn mowing service for parks, societies, and large gardens. Regular cutting keeps your grass healthy, uniform, and beautifully manicured.",
       image: "/LandingPage/grass_cutting.jpg",
       features: [
-        "Regular mowing schedules",
-        "Edge trimming", 
-        "Grass collection"
+        "Professional mowing",
+        "Edge trimming",
+        "Grass collection & disposal"
       ],
-      // price: 2500,
       period: "per service",
       badge: "Popular",
-      category: "maintenance"
+      category: "park-lawn"
     },
     {
       id: 2,
-      title: "Tree Work",
-      description: "Expert tree care services including pruning, removal, and health assessments. Our certified arborists ensure your trees remain healthy and safe.",
-      image: "/LandingPage/tree_work.jpg",
+      title: "Lawn Care & Maintenance",
+      description: "Complete lawn care including fertilization, weed control, aeration, and seasonal treatments. Keep your lawn lush, green, and healthy year-round.",
+      image: "/LandingPage/grass_cutting.jpg",
       features: [
-        "Tree pruning & trimming",
-        "Tree removal",
-        "Health assessments"
+        "Fertilization & feeding",
+        "Weed & pest control",
+        "Aeration & overseeding"
       ],
-      // price: 6200,
-      period: "per service",
-      badge: "Expert",
-      category: "tree"
+      period: "per treatment",
+      badge: "Best Value",
+      category: "park-lawn"
     },
     {
       id: 3,
-      title: "Planting",
-      description: "Professional planting services for flowers, shrubs, and trees. We select the right plants for your soil and climate conditions to ensure optimal growth.",
+      title: "Tree Pruning & Trimming",
+      description: "Expert tree care services including pruning, trimming, and health assessments. Our certified arborists ensure your trees remain healthy, safe, and beautiful.",
       image: "/LandingPage/tree_work.jpg",
       features: [
-        "Plant selection advice",
-        "Soil preparation",
-        "Professional planting"
+        "Professional pruning",
+        "Safety trimming",
+        "Health assessments"
       ],
-      // price: 4200,
       period: "per service",
-      badge: "New",
-      category: "planting"
+      badge: "Expert",
+      category: "park-lawn"
     },
     {
       id: 4,
-      title: "Lawn Care",
-      description: "Comprehensive lawn care including fertilization, weed control, and aeration. Keep your lawn lush, green, and healthy throughout the seasons.",
-      image: "/LandingPage/grass_cutting.jpg",
-      features: [
-        "Fertilization programs",
-        "Weed control",
-        "Lawn aeration"
-      ],
-      // price: 3300,
-      period: "per treatment",
-      badge: "Best Value",
-      category: "maintenance"
-    },
-    {
-      id: 5,
-      title: "Hedge Cutting",
+      title: "Hedge Cutting & Shaping",
       description: "Professional hedge trimming and shaping services to maintain neat, attractive boundaries and privacy screens around your property.",
       image: "/LandingPage/land_scaping.jpg",
       features: [
         "Precision trimming",
-        "Shape maintenance",
+        "Creative shaping",
         "Debris cleanup"
       ],
-      // price: 2900,
       period: "per service",
       badge: "Popular",
-      category: "maintenance"
+      category: "park-lawn"
     },
     {
-      id: 6,
-      title: "Tidying Up",
-      description: "Complete garden cleanup services including leaf removal, debris clearing, and seasonal maintenance to keep your outdoor space pristine.",
-      image: "/LandingPage/grass_cutting.jpg",
-      features: [
-        "Leaf removal",
-        "Debris clearing",
-        "Seasonal cleanup"
-      ],
-      // price: 3800,
-      period: "per visit",
-      badge: "Seasonal",
-      category: "maintenance"
-    },
-    {
-      id: 7,
-      title: "Landscaping",
+      id: 5,
+      title: "Landscaping Design & Execution",
       description: "Complete landscape design and installation services to transform your outdoor space into a stunning garden paradise tailored to your vision.",
       image: "/LandingPage/land_scaping.jpg",
       features: [
-        "Custom design",
-        "Plant installation",
-        "Hardscape features"
+        "Custom design plans",
+        "Professional installation",
+        "Hardscape & softscape"
       ],
-      // price: 16500,
       period: "per project",
       badge: "Premium",
-      category: "design"
+      category: "park-lawn"
+    },
+    {
+      id: 6,
+      title: "Seasonal Outdoor Planting",
+      description: "Professional seasonal planting services for flowers, shrubs, and trees. We select the right plants for your climate to ensure vibrant, year-round beauty.",
+      image: "/LandingPage/tree_work.jpg",
+      features: [
+        "Seasonal plant selection",
+        "Soil preparation",
+        "Professional planting"
+      ],
+      period: "per service",
+      badge: "Seasonal",
+      category: "park-lawn"
+    },
+    {
+      id: 7,
+      title: "Monthly Garden Maintenance Contract",
+      description: "Premium monthly maintenance package for parks and large gardens. Includes grass cutting, pruning, fertilization, pest control, and seasonal care. Hassle-free garden management.",
+      image: "/LandingPage/land_scaping.jpg",
+      features: [
+        "Regular grass cutting",
+        "Pruning & trimming",
+        "Fertilization & pest control",
+        "Seasonal planting"
+      ],
+      period: "monthly contract",
+      badge: "Popular",
+      category: "park-lawn"
+    },
+
+    // ========================================
+    // HOME, BALCONY & POT SERVICES
+    // For flats, homes, balconies, indoor plants
+    // ========================================
+    {
+      id: 8,
+      title: "Indoor & Balcony Garden Setup",
+      description: "Transform your balcony or indoor space into a green paradise. Complete setup with plant selection, pot arrangement, and design consultation.",
+      image: "/LandingPage/grass_cutting.jpg",
+      features: [
+        "Space planning & design",
+        "Plant & pot selection",
+        "Complete installation"
+      ],
+      period: "per project",
+      badge: "Popular",
+      category: "home-balcony"
+    },
+    {
+      id: 9,
+      title: "Flower Pot Planting",
+      description: "Professional pot planting service for your home, balcony, or terrace. We bring the right plants, soil, and expertise to create beautiful potted gardens.",
+      image: "/LandingPage/tree_work.jpg",
+      features: [
+        "Plant selection advice",
+        "Quality soil & fertilizer",
+        "Professional planting"
+      ],
+      period: "per service",
+      badge: "Best Value",
+      category: "home-balcony"
+    },
+    {
+      id: 10,
+      title: "Pot & Plant Maintenance Service",
+      description: "Complete plant care service including repotting, soil replacement, fertilizer application, pruning, and pest control. Keep your plants healthy and thriving.",
+      image: "/LandingPage/grass_cutting.jpg",
+      features: [
+        "Repotting & soil change",
+        "Fertilizer management",
+        "Pruning & pest control"
+      ],
+      period: "per visit",
+      badge: "Comprehensive",
+      category: "home-balcony"
+    },
+    {
+      id: 11,
+      title: "Repotting & Soil Replacement",
+      description: "Expert repotting service with fresh, nutrient-rich soil. Perfect for plants that have outgrown their pots or need soil rejuvenation.",
+      image: "/LandingPage/land_scaping.jpg",
+      features: [
+        "Careful repotting",
+        "Premium soil mix",
+        "Root health check"
+      ],
+      period: "per pot",
+      badge: "Essential",
+      category: "home-balcony"
+    },
+    {
+      id: 12,
+      title: "Plant Health Check & Treatment",
+      description: "Professional plant diagnosis and treatment service. We identify diseases, pests, and nutrient deficiencies, and provide targeted solutions.",
+      image: "/LandingPage/tree_work.jpg",
+      features: [
+        "Health diagnosis",
+        "Pest & disease treatment",
+        "Care recommendations"
+      ],
+      period: "per visit",
+      badge: "Expert",
+      category: "home-balcony"
+    },
+    {
+      id: 13,
+      title: "Monthly Home Plant Care Service",
+      description: "Premium monthly care package for your home plants. Includes watering guidance, fertilization, pruning, pest control, repotting, and health monitoring. Worry-free plant care.",
+      image: "/LandingPage/land_scaping.jpg",
+      features: [
+        "Regular health checks",
+        "Fertilization & pruning",
+        "Pest control & treatment",
+        "Repotting when needed"
+      ],
+      period: "monthly contract",
+      badge: "Popular",
+      category: "home-balcony"
     }
   ];
 
@@ -290,11 +378,6 @@ const Services = () => {
         <div className="relative z-20 h-full flex items-center justify-center">
           <div className="max-w-7xl mx-auto px-4 lg:px-8 text-center">
             <div className="animate-fade-in-up">
-              <div className="inline-block mb-4">
-                <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                  🌟 Premium Services
-                </span>
-              </div>
               
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-lg">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-green-400">
@@ -317,6 +400,30 @@ const Services = () => {
       {/* Search and Filter Section */}
       <section className="py-8 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          {/* Category Selection Bar */}
+          <div className="flex items-center justify-center mb-6">
+            <div className="inline-flex bg-gray-100 p-1 rounded-2xl border border-gray-200">
+              {[
+                { value: 'all', label: 'All Services', icon: '🌿' },
+                { value: 'park-lawn', label: 'Park & Lawn', icon: '🌳' },
+                { value: 'home-balcony', label: 'Home & Balcony', icon: '🏡' }
+              ].map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => setSelectedCategory(tab.value)}
+                  className={`px-6 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
+                    selectedCategory === tab.value
+                      ? 'bg-white text-green-700 shadow-sm'
+                      : 'text-gray-600 hover:text-green-700'
+                  }`}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             {/* Search Bar */}
             <div className="relative flex-1 w-full">
@@ -385,11 +492,9 @@ const Services = () => {
                       <h4 className="text-sm font-semibold text-gray-700 mb-3">Service Category</h4>
                       <div className="space-y-2">
                         {[
-                          { value: 'all', label: 'All Categories' },
-                          { value: 'maintenance', label: 'Maintenance' },
-                          { value: 'tree', label: 'Tree Work' },
-                          { value: 'planting', label: 'Planting' },
-                          { value: 'design', label: 'Design' }
+                          { value: 'all', label: 'All Services' },
+                          { value: 'park-lawn', label: '🌳 Park & Lawn Services' },
+                          { value: 'home-balcony', label: '🏡 Home, Balcony & Pot Services' }
                         ].map((category) => (
                           <label key={category.value} className="flex items-center space-x-3 cursor-pointer group">
                             <input
@@ -425,10 +530,12 @@ const Services = () => {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-green-800 mb-2">
-                  Our Services Collection
+                  {selectedCategory === 'all' && 'All Services'}
+                  {selectedCategory === 'park-lawn' && '🌳 Park & Lawn Services'}
+                  {selectedCategory === 'home-balcony' && '🏡 Home, Balcony & Pot Services'}
                 </h2>
                 <p className="text-gray-600">
-                  {filteredServices.length} services found
+                  {filteredServices.length} service{filteredServices.length !== 1 ? 's' : ''} available
                 </p>
               </div>
             </div>
@@ -437,7 +544,7 @@ const Services = () => {
               {filteredServices.map((service, index) => (
                 <div
                   key={service.id}
-                  className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-100 relative"
+                  className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden relative border border-gray-100"
                   style={{
                     animationDelay: `${index * 0.1}s`
                   }}

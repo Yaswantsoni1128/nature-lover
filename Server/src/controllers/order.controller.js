@@ -19,16 +19,22 @@ const orderController = {
                 );
             }
 
-            // Create order with confirmed status
+            // Calculate estimated delivery date (4-5 days from now)
+            const estimatedDeliveryDate = new Date();
+            estimatedDeliveryDate.setDate(estimatedDeliveryDate.getDate() + 5); // 5 days
+
+            // Create order with pending status (will be updated by admin)
             const order = new Order({
                 user: userId,
                 items: cart.items,
                 totalAmount: cart.totalAmount,
                 totalItems: cart.totalItems,
-                status: 'confirmed', // Set as confirmed by default
+                status: 'pending', // Set as pending, admin will update
                 deliveryAddress: deliveryAddress || {},
                 contactInfo: contactInfo || {},
-                notes: notes || ""
+                notes: notes || "",
+                whatsappSent: true, // Mark as WhatsApp sent since user will be redirected
+                estimatedDeliveryDate: estimatedDeliveryDate
             });
 
             await order.save();
@@ -40,7 +46,7 @@ const orderController = {
             await cart.save();
 
             // Populate user details
-            await order.populate('user', 'name email phone');
+            await order.populate('user', 'fullName email phone');
 
             res.status(201).json(
                 new ApiResponse(201, order, "Order created successfully")
